@@ -33,7 +33,7 @@ class Stats:
 
 url = 'https://web.archive.org/web/20200610170746/https://socialblade.com/youtube/user/chloesaddiction/monthly'
 
-def create_lists(url):
+def create_lists(year):
     resp = requests.get(url).text
     soup = BeautifulSoup(resp, 'html.parser')
 
@@ -55,7 +55,7 @@ def create_lists(url):
             sub_tag_list.append(item)
         count = count + 1
 
-    sub_tag_list[-1] = sub_tag_list[-1][:-6]
+    #sub_tag_list[-1] = sub_tag_list[-1][:-6]
 
     print(sub_tag_list)
     print(date_tag_list)
@@ -68,11 +68,15 @@ def create_lists(url):
 # create_lists(test2_url)
 
 #BABISH
-# test_url = 'https://web.archive.org/web/20190524071535/https://socialblade.com/youtube/user/bgfilms/monthly'
-# test2_url = 'https://web.archive.org/web/20200928231806/https://socialblade.com/youtube/user/bgfilms/monthly'
-create_lists(test2_url)
+test_url = 'https://web.archive.org/web/20190524113349/https://socialblade.com/youtube/user/bgfilms/monthly'
+# test2_url = 'https://web.archive.org/web/20200610170746/https://socialblade.com/youtube/user/bgfilms/monthly'
+create_lists(test_url)
+# create_lists(test2_url)
 
-
+year = 2020
+channel = 'bgfilms'
+base_url = 'https://web.archive.org/web/' + str(year) + '0524113349/https://socialblade.com/youtube/user/' + channel + '/monthly'
+create_lists(base_url)
 
 
 
