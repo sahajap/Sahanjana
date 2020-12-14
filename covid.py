@@ -33,14 +33,14 @@ def collect_covid_data():
 def test_create_covid_table(covid_data):
     # Takes in a list of tuples in the format (date, cases) and creates a table in SQLite
     # doesn't return anything
-    cur.execute('''CREATE TABLE if not exists covidData (date text PRIMARY KEY, cases number)''')
+    cur.execute('''CREATE TABLE if not exists TESTcovidData (date text PRIMARY KEY, cases number)''')
 
     for i in range(0, 10):
         for j in range(0, 25):
             try:
                 j = j + (25 * i)
                 value = covid_data[j]
-                conn.execute('INSERT INTO covidData VALUES(?,?)', value)
+                conn.execute('INSERT INTO TESTcovidData VALUES(?,?)', value)
                 conn.commit()
             except:
                 break

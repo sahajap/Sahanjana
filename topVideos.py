@@ -41,11 +41,11 @@ def create_topVideos_table(keyword):
     # Takes in the channel_type and creates a table in the database with the tuple of 
     # (unique tag, channel_type, videoid, channelid, title of channel, and publishTime) 
     # for the top 50 channels of the specific keyword
-    cur.execute('''CREATE TABLE if not exists top50videos
+    cur.execute('''CREATE TABLE if not exists TESTtop50videos
     (etag text PRIMARY_KEY, category text, videoId text, channelId text, channelTitle text, publishDate text)''')
     topVidList = topVideos(keyword)
 
-    cur.execute('SELECT etag FROM top50videos')
+    cur.execute('SELECT etag FROM TESTtop50videos')
     rows = cur.fetchall()
     avoid_duplicates_list = []
     for row in rows:
@@ -61,7 +61,7 @@ def create_topVideos_table(keyword):
                 j = j + (25 * i)
                 etag = topVidList[j][0]
                 if etag not in avoid_duplicates_list:
-                    conn.execute('INSERT INTO top50videos VALUES(?,?,?,?,?,?)', topVidList[j])
+                    conn.execute('INSERT INTO TESTtop50videos VALUES(?,?,?,?,?,?)', topVidList[j])
                     counter = counter + 1
                     conn.commit()
             except:
