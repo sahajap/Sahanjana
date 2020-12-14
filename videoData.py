@@ -14,6 +14,9 @@ conn = sqlite3.connect('final.db')
 cur = conn.cursor()
 
 def video_stats(video_id, keyword):
+    # Utilizes Youtube API; 
+    # Takes in a video_id and channel_type and outputs a list of tuples in format of 
+    # (video_id, channel_type, total view count, total like count)
     url = 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=' + video_id + '&key=' + API_KEY
     json_url = requests.get(url)
     data = json.loads(json_url.text)
@@ -33,6 +36,9 @@ def video_stats(video_id, keyword):
     return video_tuple
 
 def create_video_stats_table(keyword):
+    # Takes in the channel_type and creates a table in the database with the tuple of 
+    # (video_id, channel_type, total view count, total like count) 
+    # for all the videos collected in topVideos table
     cur.execute('SELECT videoId FROM top50videos')
     video_rows = cur.fetchall()
     video_id_list = []

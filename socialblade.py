@@ -25,6 +25,9 @@ cur = conn.cursor()
 url = 'https://web.archive.org/web/20200610170746/https://socialblade.com/youtube/user/chloesaddiction/monthly'
 
 def create_date_list(year, user):
+    # Web scrapes data from the social blade archives
+    # Takes in a year and the username for a channel
+    # Outputs a list of dates for a given year and user
     url = 'https://web.archive.org/web/' + str(year) + '0610170746/https://socialblade.com/youtube/user/' + user + '/monthly'
     resp = requests.get(url).text
     soup = BeautifulSoup(resp, 'html.parser')
@@ -66,6 +69,9 @@ def create_date_list(year, user):
 
 
 def create_subscriber_list(year, user):
+    # Web scrapes data from the social blade archives
+    # Input a year and the username for a channel
+    # Outputs a list of total subscribers for a given date and name
     url = 'https://web.archive.org/web/' + str(year) + '0610170746/https://socialblade.com/youtube/user/' + user + '/monthly'
     resp = requests.get(url).text
     soup = BeautifulSoup(resp, 'html.parser')
@@ -100,6 +106,9 @@ def create_subscriber_list(year, user):
 
 
 def create_table(year, user):
+    # Takes in a year and user
+    # Creates a list of dates and totalSubscriber count for those dates
+    # Creates a table in the SQLite database in the form of (username, date, number of subscribers)
     cur.execute('''CREATE TABLE if not exists SOCIALBLADE (user text, date text, subscribers text)''')
 
     date_list = create_date_list(year, user)
@@ -131,11 +140,6 @@ def create_table(year, user):
             break
         continue
 
-
-# user_id_list = ['chloesaddiction', 'fitnessblender', 'bgfilms', 'bonappetitdotcom']
-# for user in user_id_list:
-#     create_table(2019, user)
-#     create_table(2020, user)
 
 user_name = input("Type username: ")
 if user_name != "":

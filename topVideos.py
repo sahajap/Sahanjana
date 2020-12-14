@@ -13,8 +13,10 @@ API_KEY = 'AIzaSyDcg05zH6fsV5z4dqeLs6Pb3tNsx6K9GtM'
 conn = sqlite3.connect('final.db')
 cur = conn.cursor()
 
-#collects the top (insert number) of videos, given a keyword and the number of results wanted
 def topVideos(keyword):
+    # Utilizes YoutubeAPI 
+    # Collects the top 50 videos for a specific channel_type(keyword) and outputs a list of tuples in format of  
+    # (unique tag, channel_type, videoid, channelid, title of channel, and publishTime)
     url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + keyword + "&publishedAfter=2020-03-01T00:00:00Z&maxResults=50&key=" + API_KEY
     json_url = requests.get(url)
     data = json.loads(json_url.text)
@@ -36,6 +38,9 @@ def topVideos(keyword):
     return youtlist
 
 def create_topVideos_table(keyword):
+    # Takes in the channel_type and creates a table in the database with the tuple of 
+    # (unique tag, channel_type, videoid, channelid, title of channel, and publishTime) 
+    # for the top 50 channels of the specific keyword
     cur.execute('''CREATE TABLE if not exists top50videos
     (etag text PRIMARY_KEY, category text, videoId text, channelId text, channelTitle text, publishDate text)''')
     topVidList = topVideos(keyword)

@@ -13,6 +13,8 @@ conn = sqlite3.connect('final.db')
 cur = conn.cursor()
 
 def covidCalculations(csvfile):
+    # Takes in the name of csvfile and writes to that file
+    # Calculates the percent increase of covid cases per day using the data from covidData from the SQLite database
     cur.execute('SELECT * FROM covidData')
     rows = cur.fetchall()
     cases_list = []
@@ -41,6 +43,9 @@ def covidCalculations(csvfile):
             writer.writerow({'date': date, 'cases': num_cases, 'growth_rate': growth})
 
 def socialBladeCalculations(csvfile, keyword):
+    # Takes in the name of csvfile and writes to that file
+    # Calculates the growth rate of subscribers from the dates provided in the SOCIALBLADE table
+    # Takes in a channelname
     cur.execute('SELECT * FROM SOCIALBLADE WHERE user="{}"'.format(keyword))
     rows = cur.fetchall()
     sub_list = []
@@ -58,18 +63,22 @@ def socialBladeCalculations(csvfile, keyword):
             subs_growth.append(2.0)
     
     with open(csvfile, mode='w') as csv_file:
-        fieldnames = ['channel_name', 'date', 'growth_rate']
+        fieldnames = ['channel_name', 'date', 'number_of_subs', 'growth_rate']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
         for i in range(0, len(date_list)):
             date = date_list[i]
+            sub = sub_list[i]
             try:
                 growth = subs_growth[i+1]
             except:
                 break
-            writer.writerow({'channel_name': keyword, 'date': date, 'growth_rate': growth})
+            writer.writerow({'channel_name': keyword, 'date': date, 'number_of_subs': sub,'growth_rate': growth})
 
 def socialBladeAverageCalculations(csvfile, keyword):
+    # Takes in the name of csvfile and writes to that file
+    # Calculates the average growth rate of subscribers in 2019 and 2020
+    # Takes in a channelname
     cur.execute('SELECT * FROM SOCIALBLADE WHERE user="{}"'.format(keyword))
     rows = cur.fetchall()
     sub_list = []
@@ -116,6 +125,8 @@ def socialBladeAverageCalculations(csvfile, keyword):
         writer.writerow({'channel_name': keyword, '2019average': average2019, '2020average':average2020})
     
 def top5(keyword):
+    # Takes in a channel_type
+    # Outputs a list of top 5 channels (most frequent channels) for a given channel_type
     cur.execute('SELECT channelId FROM top50videos WHERE category="{}"'.format(keyword))
     rows = cur.fetchall()
     channel_list = []
@@ -139,7 +150,11 @@ def top5(keyword):
     return top
 
 def JOINfunc(keyword, csvfile):
-    #selectTrack.title, Genre.namefromTrackjoinGenreonTrack.genre_id= Genre.id
+    # Takes in a channel type and csvfile name and writes to the csvfile
+    # Join the channelData, videoData, and top50videos tables 
+    # Calculates total number of likes and views for a specific channel and calculates the proportion of views to likes
+    # Creates a csv_file with the format below for a specific channel
+    # ('Channel Title', 'Number of Videos','Total Views', 'Total Likes', 'Proportion of Likes', 'Subscriber Count')
     top5_list = top5(keyword)
 
     
@@ -172,16 +187,16 @@ def JOINfunc(keyword, csvfile):
 
 
 # covidCalculations('covid.csv')
-# socialBladeCalculations('chloesaddictiongrowth.csv', 'chloesaddiction')
-# socialBladeAverageCalculations('chloesaddictionaveragegrowth.csv', 'chloesaddiction')
-# socialBladeCalculations('fitnessblendergrowth.csv', 'fitnessblender')
-# socialBladeAverageCalculations('fitnessblenderaveragegrowth.csv', 'fitnessblender')
-# socialBladeCalculations('bgfilmsgrowth.csv', 'bgfilms')
-# socialBladeAverageCalculations('bgfilmsaveragegrowth.csv', 'bgfilms')
-# socialBladeCalculations('bonappetitdotcomgrowth.csv', 'bonappetitdotcom')
-# socialBladeAverageCalculations('bonappetitdotcomaveragegrowth.csv', 'bonappetitdotcom')
+socialBladeCalculations('chloesaddictiongrowth.csv', 'chloesaddiction')
+socialBladeAverageCalculations('chloesaddictionaveragegrowth.csv', 'chloesaddiction')
+socialBladeCalculations('fitnessblendergrowth.csv', 'fitnessblender')
+socialBladeAverageCalculations('fitnessblenderaveragegrowth.csv', 'fitnessblender')
+socialBladeCalculations('bgfilmsgrowth.csv', 'bgfilms')
+socialBladeAverageCalculations('bgfilmsaveragegrowth.csv', 'bgfilms')
+socialBladeCalculations('bonappetitdotcomgrowth.csv', 'bonappetitdotcom')
+socialBladeAverageCalculations('bonappetitdotcomaveragegrowth.csv', 'bonappetitdotcom')
 
-JOINfunc('workout', 'top5workout.csv')
-JOINfunc('cooking', 'top5cooking.csv')
+# JOINfunc('workout', 'top5workout.csv')
+# JOINfunc('cooking', 'top5cooking.csv')
 
 
